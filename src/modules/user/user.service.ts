@@ -1,4 +1,5 @@
 import {
+  HttpException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -20,17 +21,26 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<HttpResponse> {
+    // check if user with this email already exists
+    const user = await this.userRepository.findOneBy({
+      email: createUserDto.email,
+    });
+    if (user) {
+      throw new HttpException('Email already exists', 400);
+    }
+
+    // hash password
     const saltOrRounds = 10;
     const hashedPassword = await bcrypt.hash(
       createUserDto.password,
       saltOrRounds,
     );
 
+    // save user to database
     const newUser = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
-
     await this.userRepository.save(newUser);
 
     return {
@@ -40,19 +50,21 @@ export class UserService {
   }
 
   async loginUser(loginUserDto: LoginUserDto): Promise<HttpResponse> {
+    // check if user with this email exists
     const user = await this.userRepository.findOneBy({
       email: loginUserDto.email,
     });
-
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
+    // check if passwords match
     const isMatch = await bcrypt.compare(loginUserDto.password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Incorrect password');
     }
 
+    // create jwt token
     const { id, email } = user;
     const jwtToken = this.authService.createToken({ id, email });
 
@@ -63,6 +75,7 @@ export class UserService {
   }
 
   async getUser(userId: number) {
+    // get user info from database
     const user = await this.userRepository.findOneBy({
       id: userId,
     });
@@ -70,7 +83,9 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
+    // remove password from response
     delete user.password;
+
     return user;
   }
 }

@@ -20,6 +20,7 @@ export class OrderService {
   ) {}
 
   async createNewOrder(createOrderDto: CreateOrderDto, userId: number) {
+    // check if user with given id exists
     const user = await this.userRepository.findOneBy({
       id: userId,
     });
@@ -27,15 +28,16 @@ export class OrderService {
       throw new NotFoundException('User not found');
     }
 
+    // check if user balance is enough to place this order
     if (user.balance < createOrderDto.price) {
       throw new HttpException('Insufficient balance', HttpStatus.BAD_REQUEST);
     }
 
-    // save order
+    // save order to database
     const newOrder = this.orderRepository.create({ ...createOrderDto, userId });
     await this.orderRepository.save(newOrder);
 
-    // adjust user balance
+    // modify user balance
     const newBalance = user.balance - createOrderDto.price;
     await this.userRepository.update({ id: userId }, { balance: newBalance });
 
@@ -46,6 +48,7 @@ export class OrderService {
   }
 
   async getUserOrders(userId: number) {
+    // check user with given id exists
     const user = await this.userRepository.findOneBy({
       id: userId,
     });
@@ -53,7 +56,9 @@ export class OrderService {
       throw new NotFoundException('User not found');
     }
 
+    // get user orders as array
     const userOrders = await this.orderRepository.findBy({ userId });
+
     return userOrders;
   }
 }
