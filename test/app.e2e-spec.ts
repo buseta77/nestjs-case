@@ -8,11 +8,23 @@ import { AppModule } from './../src/app.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './../src/modules/user/user.entity';
 import { Order } from './../src/modules/order/order.entity';
+import { faker } from '@faker-js/faker';
+
+function generateRandomUser() {
+  return {
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    email: faker.internet.email(),
+    password: faker.internet.password({ length: 4 }),
+  };
+}
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  let token;
-  let userId;
+  let token: string;
+  let userId: number;
+
+  const randomUser = generateRandomUser();
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -35,12 +47,7 @@ describe('AppController (e2e)', () => {
   it('should create a new user with default balance = 100', async () => {
     const signupRequest = await request(app.getHttpServer())
       .post('/user/signup')
-      .send({
-        firstName: 'İsim',
-        lastName: 'Soyisim',
-        email: 'test111@test.com',
-        password: '1234',
-      })
+      .send(randomUser)
       .expect(HttpStatus.OK)
       .expect((res) => {
         expect(res.body.message).toEqual('User successfully created');
@@ -53,8 +60,8 @@ describe('AppController (e2e)', () => {
     const loginRequest = await request(app.getHttpServer())
       .post('/user/login')
       .send({
-        email: 'test111@test.com',
-        password: '1234',
+        email: randomUser.email,
+        password: randomUser.password,
       })
       .expect(HttpStatus.OK)
       .expect((res) => {
