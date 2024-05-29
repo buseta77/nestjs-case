@@ -12,28 +12,16 @@
 5. Run "npm start" to start the server, which will start listening at the localhost:3000 port.
 6. You can also run "npm run test:e2e" to run end to end test, which pretty much covers most of the endpoints.
 
-## Endpoints
+## APIs
 
-POST /user/signup
-Description: Signs up a new user.
-Example request body:
-
-````{
-  "firstName": "name",
-  "lastName": "surname",
-  "email": "email@test.com",
-  "password": "1234"
-}```
-
-## Installation
-
-```bash
-$ npm install
-````
+All endpoints of the app is included in the "apis.json" file.
 
 ## Running the app
 
 ```bash
+# install
+$ npm install
+
 # development
 $ npm start
 
