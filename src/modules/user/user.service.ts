@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto, LoginUserDto } from './user.dto';
 import * as bcrypt from 'bcrypt';
-import { HttpResponse } from './user.interface';
+import { HttpResponse } from '../../utils/interfaces';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable()
@@ -58,7 +58,7 @@ export class UserService {
 
     return {
       message: 'Login successful',
-      data: { access_token: jwtToken },
+      data: { token: jwtToken },
     };
   }
 }

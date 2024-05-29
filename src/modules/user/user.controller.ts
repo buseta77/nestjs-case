@@ -8,14 +8,14 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, LoginUserDto } from './user.dto';
-import { HttpResponse } from './user.interface';
+import { HttpResponse } from '../../utils/interfaces';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('signup')
-  @HttpCode(201)
+  @HttpCode(200)
   @UsePipes(new ValidationPipe({ transform: true }))
   createUser(@Body() createUserDto: CreateUserDto): Promise<HttpResponse> {
     return this.userService.createUser(createUserDto);
