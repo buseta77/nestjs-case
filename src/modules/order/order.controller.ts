@@ -8,15 +8,10 @@ import {
   Req,
   ValidationPipe,
 } from '@nestjs/common';
-import { HttpResponse, OrderData } from '../../utils/interfaces';
+import { AuthRequest, HttpResponse, OrderData } from '../../utils/interfaces';
 import { AuthGuard } from '@nestjs/passport';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './order.dto';
-import { Request } from 'express';
-
-export interface AuthRequest extends Request {
-  user: { userId: number };
-}
 
 @Controller('order')
 export class OrderController {

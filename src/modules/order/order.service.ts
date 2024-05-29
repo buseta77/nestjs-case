@@ -37,7 +37,7 @@ export class OrderService {
 
     // adjust user balance
     const newBalance = user.balance - createOrderDto.price;
-    await this.userRepository.update(userId, { balance: newBalance });
+    await this.userRepository.update({ id: userId }, { balance: newBalance });
 
     return {
       message: 'Order successfully placed',
@@ -49,7 +49,7 @@ export class OrderService {
     const user = await this.userRepository.findOneBy({
       id: userId,
     });
-    if (!user) {
+    if (!user || !userId) {
       throw new NotFoundException('User not found');
     }
 
