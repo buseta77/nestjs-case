@@ -1,0 +1,66 @@
+[
+  {
+    "endpoint": "POST /user/signup",
+    "description": "Signs up a new user",
+    "requestBody": {
+      "firstName": "name",
+      "lastName": "surname",
+      "email": "email@test.com",
+      "password": "1234"
+    },
+    "responseBody": {
+      "message": "string",
+      "data": {
+        "userId": 1
+      }
+    }
+  },
+  {
+    "endpoint": "POST /user/login",
+    "description": "Logs in a user",
+    "requestBody": {
+      "email": "email@test.com",
+      "password": "1234"
+    },
+    "responseBody": {
+      "message": "string",
+      "data": {
+        "token": "string"
+      }
+    }
+  },
+  {
+    "endpoint": "GET /user",
+    "description": "Gets user info",
+    "responseBody": {
+      "id": 1,
+      "firstName": "name",
+      "lastName": "surname",
+      "email": "email@test.com",
+      "balance": 100
+    }
+  },
+  {
+    "endpoint": "POST /order/create",
+    "description": "Creates a new order for a user",
+    "requestBody": {
+      "productName": "pencil",
+      "quantity": 1,
+      "price": 20
+    }
+  },
+  {
+    "endpoint": "GET /order/getAll",
+    "description": "Gets the list of all orders of a user",
+    "responseBody": [
+      {
+        "id": 1,
+        "productName": "pencil",
+        "quantity": 1,
+        "price": 20,
+        "isCompleted": false,
+        "userId": 1
+      }
+    ]
+  }
+]
