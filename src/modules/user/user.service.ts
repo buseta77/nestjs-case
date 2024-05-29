@@ -61,4 +61,16 @@ export class UserService {
       data: { token: jwtToken },
     };
   }
+
+  async getUser(userId: number) {
+    const user = await this.userRepository.findOneBy({
+      id: userId,
+    });
+    if (!user || !userId) {
+      throw new NotFoundException('User not found');
+    }
+
+    delete user.password;
+    return user;
+  }
 }

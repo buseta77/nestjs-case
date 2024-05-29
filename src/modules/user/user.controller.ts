@@ -2,13 +2,17 @@ import {
   Controller,
   Body,
   Post,
+  Get,
   HttpCode,
   UsePipes,
+  Req,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, LoginUserDto } from './user.dto';
-import { HttpResponse } from '../../utils/interfaces';
+import { AuthRequest, HttpResponse, UserData } from '../../utils/interfaces';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -26,5 +30,13 @@ export class UserController {
   @UsePipes(new ValidationPipe({ transform: true }))
   loginUser(@Body() loginUserDto: LoginUserDto): Promise<HttpResponse> {
     return this.userService.loginUser(loginUserDto);
+  }
+
+  @Get('/')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('jwt'))
+  getUser(@Req() req: AuthRequest): Promise<UserData> {
+    const userId = req.user.userId;
+    return this.userService.getUser(userId);
   }
 }
